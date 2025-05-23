@@ -1,20 +1,21 @@
-# Website Summarization Agent with LangGraph
+# Content Summarization Agent with LangGraph
 
-This project implements an agent using the LangGraph framework that opens a browser, navigates to a specified URL, extracts the content, and generates a summary using Claude (Anthropic's LLM). The agent is available through both a FastAPI endpoint and a Gradio UI.
+This project implements an agent using the LangGraph framework that can summarize content from websites and PDF files using Claude (Anthropic's LLM). The agent is available through both a FastAPI endpoint and a Gradio UI.
 
 ## Project Structure
 
 - `app.py`: FastAPI application with the API endpoints
-- `gradio_app.py`: Gradio UI for the website summarization
+- `gradio_app.py`: Gradio UI for the content summarization
 - `graph.py`: LangGraph definition with the website summarization workflow
 - `browser_utils.py`: Utility functions for browser automation, text extraction, and summary generation
+- `pdf_utils.py`: Utility functions for PDF text extraction and summary generation
 - `.env`: Environment variables file containing the Anthropic API key
 
 ## Requirements
 
 - Python 3.8+
 - Virtual environment (venv)
-- Dependencies: langgraph, fastapi, uvicorn, playwright, langchain-community, anthropic, gradio
+- Dependencies: langgraph, fastapi, uvicorn, playwright, langchain-community, anthropic, gradio, PyPDF2
 - Anthropic API key (stored in .env file)
 
 ## Setup
@@ -27,7 +28,7 @@ This project implements an agent using the LangGraph framework that opens a brow
 
 2. Install the required packages:
    ```
-   pip install langgraph fastapi uvicorn playwright langchain-community anthropic gradio
+   pip install langgraph fastapi uvicorn playwright langchain-community anthropic gradio PyPDF2
    ```
 
 3. Install Playwright browsers:
@@ -49,7 +50,9 @@ Start the Gradio UI:
 python gradio_app.py
 ```
 
-The Gradio UI will start and open in your default web browser. You can enter a URL and click the "Summarize" button to get a summary of the website content.
+The Gradio UI will start and open in your default web browser. You can:
+- Enter a URL and click the "Summarize Website" button to get a summary of the website content
+- Upload a PDF file and click the "Summarize PDF" button to get a summary of the PDF content
 
 ### FastAPI Server
 
@@ -60,13 +63,23 @@ python app.py
 
 The server will start on http://0.0.0.0:8000.
 
-## LangGraph Workflow
+## Features
+
+### Website Summarization
 
 The application uses LangGraph to define a workflow with the following nodes:
 
 1. `open_browser_node`: Opens a browser and navigates to the specified URL
 2. `extract_text_node`: Extracts text content from the website
 3. `generate_summary_node`: Generates a summary of the website content using Claude
+
+### PDF Summarization
+
+The application can also extract text from PDF files and generate summaries:
+
+1. Upload a PDF file through the Gradio UI
+2. The system extracts text from the PDF using PyPDF2
+3. Claude generates a summary of the PDF content
 
 ## API Endpoints
 
@@ -116,6 +129,7 @@ Or using the FastAPI Swagger UI at http://localhost:8000/docs.
 
 ## How It Works
 
+### Website Summarization
 1. The user provides a URL through the Gradio UI or API
 2. The LangGraph workflow is triggered:
    - A browser is opened and navigates to the URL
@@ -123,4 +137,10 @@ Or using the FastAPI Swagger UI at http://localhost:8000/docs.
    - Claude (Anthropic's LLM) generates a summary of the content
 3. The summary is displayed in the UI or returned via the API
 
-The workflow is defined as a directed graph with nodes for each step and edges that determine the flow between steps.
+### PDF Summarization
+1. The user uploads a PDF file through the Gradio UI
+2. The system extracts text from the PDF using PyPDF2
+3. Claude generates a summary of the PDF content
+4. The summary is displayed in the UI
+
+The website summarization workflow is defined as a directed graph with nodes for each step and edges that determine the flow between steps.
