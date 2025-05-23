@@ -5,6 +5,10 @@ from typing import Dict, Any, TypedDict, Annotated, Literal, cast
 import asyncio
 from langgraph.graph import StateGraph, END
 from browser_utils import open_browser_and_navigate, extract_website_text, generate_summary
+from langsmith_utils import get_langsmith_client, test_langsmith_connection
+
+# Initialize LangSmith client
+langsmith_client = get_langsmith_client()
 
 # Define the state schema
 class BrowserState(TypedDict):
@@ -99,6 +103,10 @@ async def run_browser_graph(url: str) -> Dict[str, Any]:
     Returns:
         The final state of the graph
     """
+    # Test LangSmith connection
+    print("🔍 Testing LangSmith connection...")
+    test_langsmith_connection()
+    
     # Create the graph
     graph = create_browser_graph()
     
